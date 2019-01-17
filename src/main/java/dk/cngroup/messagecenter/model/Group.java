@@ -12,7 +12,7 @@ public class Group {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY,
@@ -58,5 +58,9 @@ public class Group {
 
 	public void assignDevice(Device deviceOne) {
 		devices.add(deviceOne);
+	}
+
+	public void assignDevices(Set<Device> devices) {
+		this.devices.addAll(devices);
 	}
 }

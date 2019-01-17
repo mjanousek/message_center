@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -51,7 +52,7 @@ public class GroupRepositoryTest {
 	}
 
 	@Test
-	public void saveGroupWithDevices() {
+	public void saveGroupWithDevicesTest() {
 		Device deviceOne = new Device("Device 1");
 		Device deviceTwo = new Device("Device 2");
 		Group originalGroup = new Group("Group 1");
@@ -65,7 +66,8 @@ public class GroupRepositoryTest {
 		assertEquals(2, actualGroup.getDevices().size());
 	}
 
-	public void saveAssignDevicesToExistingGroup() {
+	@Test
+	public void saveAssignDevicesToExistingGroupTest() {
 		Device deviceOne = new Device("Device 1");
 		Device deviceTwo = new Device("Device 2");
 		Group originalGroup = new Group("Group 1");
@@ -80,6 +82,29 @@ public class GroupRepositoryTest {
 
 		assertNotNull(actualGroup);
 		assertEquals(2, actualGroup.getDevices().size());
+	}
+
+	@Test
+	public void findExistingGroupByNameTest() {
+		String groupName = "Group";
+		Group originalGroup = new Group(groupName);
+		groupRepository.save(originalGroup);
+
+		Group actualGroup = groupRepository.findByName(groupName);
+
+		assertNotNull(actualGroup);
+		assertEquals(originalGroup.getId(), actualGroup.getId());
+	}
+
+	@Test
+	public void findNonExistingGroupByNameTest() {
+		String groupName = "Group";
+		Group originalGroup = new Group(groupName);
+		groupRepository.save(originalGroup);
+
+		Group actualGroup = groupRepository.findByName("Non existing group");
+
+		assertNull(actualGroup);
 	}
 
 	@Before

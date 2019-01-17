@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class})
@@ -46,6 +45,29 @@ public class DeviceRepositoryTest {
 
 		assertNotNull(actualDevice);
 		assertEquals(originalDevice.getName(), actualDevice.getName());
+	}
+
+	@Test
+	public void findExistingDeviceByNameTest() {
+		String deviceName = "Device";
+		Device originalDevice = new Device(deviceName);
+		deviceRepository.save(originalDevice);
+
+		Device actualDevice = deviceRepository.findByName(deviceName);
+
+		assertNotNull(actualDevice);
+		assertEquals(originalDevice.getId(), actualDevice.getId());
+	}
+
+	@Test
+	public void findNonExistingDeviceByNameTest() {
+		String deviceName = "Device";
+		Device originalDevice = new Device(deviceName);
+		deviceRepository.save(originalDevice);
+
+		Device actualDevice = deviceRepository.findByName("Non existing device");
+
+		assertNull(actualDevice);
 	}
 
 	@Before
