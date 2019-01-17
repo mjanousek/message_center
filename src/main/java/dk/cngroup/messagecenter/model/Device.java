@@ -53,4 +53,11 @@ public class Device {
 	public void setGroups(Set<Group> groups) {
 		this.groups = groups;
 	}
+
+	@Override
+	public String toString() {
+		return "Device{" +
+				"name='" + name + '\'' +
+				'}';
+	}
 }
