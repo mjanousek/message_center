@@ -1,10 +1,10 @@
-package dk.cngroup.messagecenter.service;
+package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.data.GroupRepository;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
+import dk.cngroup.messagecenter.service.Register;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -21,6 +21,9 @@ public class GroupService implements Register<Group> {
 
 	@Override
 	public Group register(Group group) {
+		if (repository.existsById(group.getName())) {
+			throw new IllegalArgumentException("Group is already registered");
+		}
 		return repository.save(group);
 	}
 

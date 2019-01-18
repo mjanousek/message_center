@@ -2,6 +2,7 @@ package dk.cngroup.messagecenter.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -9,10 +10,6 @@ import java.util.Set;
 public class Device {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@Column(nullable = false, unique = true)
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY,
@@ -28,14 +25,6 @@ public class Device {
 
 	public Device(String name) {
 		this.name = name;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -59,5 +48,19 @@ public class Device {
 		return "Device{" +
 				"name='" + name + '\'' +
 				'}';
+	}
+
+	@Override
+	// We discussed that id is deprecated
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Device device = (Device) o;
+		return Objects.equals(name, device.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
 	}
 }

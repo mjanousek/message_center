@@ -3,9 +3,9 @@ package dk.cngroup.messagecenter.service;
 import dk.cngroup.messagecenter.data.GroupRepository;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
+import dk.cngroup.messagecenter.service.entity.GroupService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.AdditionalAnswers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -58,5 +58,21 @@ public class GroupServiceTest {
 		Group actualGroup = groupService.assign(group, deviceOne, deviceTwo);
 
 		assertEquals(2, actualGroup.getDevices().size());
+	}
+
+	@Test
+	public void registerUnregisteredDeviceTest(){
+		when(groupRepository.existsById(any())).thenReturn(false);
+		when(groupRepository.existsById("Registered group")).thenReturn(true);
+
+		groupService.register(new Group("Dummy group"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void registerRegisteredGroupTest(){
+		when(groupRepository.existsById(any())).thenReturn(false);
+		when(groupRepository.existsById("Registered group")).thenReturn(true);
+
+		groupService.register(new Group("Registered group"));
 	}
 }

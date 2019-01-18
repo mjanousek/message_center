@@ -45,10 +45,10 @@ public class GroupRepositoryTest {
 	public void saveAndRetrieveEntityTest() {
 		Group originalGroup = new Group("Group 1");
 		groupRepository.save(originalGroup);
-		Group actualGroup = groupRepository.getOne(originalGroup.getId());
+		Group actualGroup = groupRepository.findByName(originalGroup.getName());
 
 		assertNotNull(actualGroup);
-		assertEquals(originalGroup.getName(), actualGroup.getName());
+		assertEquals(originalGroup, actualGroup);
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class GroupRepositoryTest {
 		originalGroup.assignDevice(deviceTwo);
 
 		groupRepository.save(originalGroup);
-		Group actualGroup = groupRepository.getOne(originalGroup.getId());
+		Group actualGroup = groupRepository.findByName(originalGroup.getName());
 
 		assertNotNull(actualGroup);
 		assertEquals(2, actualGroup.getDevices().size());
@@ -73,12 +73,12 @@ public class GroupRepositoryTest {
 		Group originalGroup = new Group("Group 1");
 		groupRepository.save(originalGroup);
 
-		Group retrievedGroup = groupRepository.getOne(originalGroup.getId());
+		Group retrievedGroup = groupRepository.findByName(originalGroup.getName());
 		retrievedGroup.assignDevice(deviceOne);
 		retrievedGroup.assignDevice(deviceTwo);
 		groupRepository.save(retrievedGroup);
 
-		Group actualGroup = groupRepository.getOne(originalGroup.getId());
+		Group actualGroup = groupRepository.findByName(originalGroup.getName());
 
 		assertNotNull(actualGroup);
 		assertEquals(2, actualGroup.getDevices().size());
@@ -93,7 +93,7 @@ public class GroupRepositoryTest {
 		Group actualGroup = groupRepository.findByName(groupName);
 
 		assertNotNull(actualGroup);
-		assertEquals(originalGroup.getId(), actualGroup.getId());
+		assertEquals(originalGroup, actualGroup);
 	}
 
 	@Test

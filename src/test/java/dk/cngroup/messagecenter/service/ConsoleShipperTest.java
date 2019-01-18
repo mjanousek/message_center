@@ -1,8 +1,8 @@
 package dk.cngroup.messagecenter.service;
 
 import dk.cngroup.messagecenter.MessageCenterApplication;
-import dk.cngroup.messagecenter.config.DataConfig;
 import dk.cngroup.messagecenter.model.Device;
+import dk.cngroup.messagecenter.model.Message;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +14,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static dk.cngroup.messagecenter.service.ConsoleShipper.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -31,28 +35,36 @@ public class ConsoleShipperTest {
 	@Test
 	public void sendMessageToOneDeviceTest() {
 		Device device = new Device("Device 1");
-		String message = "Hello World";
+		String content = "Hello World";
+		Message message = new Message(null, Collections.singleton(device), content);
 
-		consoleShipper.send(Arrays.asList(device), message);
+		consoleShipper.send(message);
 
-		String expected = String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, device, message);
-		assertEquals(expected + "\n", outContent.toString());
+		String expected = getMessage(device, message);
+		assertThat(outContent.toString(), containsString(expected));
+	}
+
+	private String getMessage(Device device, Message message) {
+		return String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, device, message.getContent());
 	}
 
 	@Test
 	public void sendMessageToMoreDevicesTest() {
 		Device deviceOne = new Device("Device 1");
 		Device deviceTwo = new Device("Device 2");
-		String message = "Hello World";
+		Set<Device> devices = new HashSet<>();
+		devices.add(deviceOne);
+		devices.add(deviceTwo);
+		String content = "Hello World";
+		Message message = new Message(null, devices, content);
 
-		consoleShipper.send(Arrays.asList(deviceOne, deviceTwo), message);
+		consoleShipper.send(message);
 
-		String expected = String.join(
-				"\n",
-				String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, deviceOne, message),
-				String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, deviceTwo, message));
+		String expectedMessageOne = getMessage(deviceOne, message);
+		String expectedMessageTwo = getMessage(deviceTwo, message);
 
-		assertEquals(expected + "\n", outContent.toString());
+		assertThat(outContent.toString(), containsString(expectedMessageOne));
+		assertThat(outContent.toString(), containsString(expectedMessageTwo));
 	}
 
 	@Before

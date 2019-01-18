@@ -2,17 +2,18 @@ package dk.cngroup.messagecenter.model;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "groups")
 public class Group {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Id
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY,
@@ -32,12 +33,9 @@ public class Group {
 		this.name = name;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+	public Group(String name, Set<Device> devices) {
+		this.name = name;
+		this.devices = devices;
 	}
 
 	public String getName() {
@@ -62,5 +60,19 @@ public class Group {
 
 	public void assignDevices(Set<Device> devices) {
 		this.devices.addAll(devices);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Group group = (Group) o;
+		return Objects.equals(name, group.name) &&
+				Objects.equals(devices, group.devices);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, devices);
 	}
 }

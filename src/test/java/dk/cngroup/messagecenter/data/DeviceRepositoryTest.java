@@ -41,10 +41,10 @@ public class DeviceRepositoryTest {
 	public void saveAndRetrieveEntityTest() {
 		Device originalDevice = new Device("Device 1");
 		deviceRepository.save(originalDevice);
-		Device actualDevice = deviceRepository.getOne(originalDevice.getId());
+		Device actualDevice = deviceRepository.findByName(originalDevice.getName());
 
 		assertNotNull(actualDevice);
-		assertEquals(originalDevice.getName(), actualDevice.getName());
+		assertEquals(originalDevice, actualDevice);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class DeviceRepositoryTest {
 		Device actualDevice = deviceRepository.findByName(deviceName);
 
 		assertNotNull(actualDevice);
-		assertEquals(originalDevice.getId(), actualDevice.getId());
+		assertEquals(originalDevice, actualDevice);
 	}
 
 	@Test
