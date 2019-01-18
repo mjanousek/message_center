@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,10 +43,6 @@ public class ConsoleShipperTest {
 		assertThat(outContent.toString(), containsString(expected));
 	}
 
-	private String getMessage(Device device, Message message) {
-		return String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, device, message.getContent());
-	}
-
 	@Test
 	public void sendMessageToMoreDevicesTest() {
 		Device deviceOne = new Device("Device 1");
@@ -65,6 +60,10 @@ public class ConsoleShipperTest {
 
 		assertThat(outContent.toString(), containsString(expectedMessageOne));
 		assertThat(outContent.toString(), containsString(expectedMessageTwo));
+	}
+
+	private String getMessage(Device receiver, Message message) {
+		return String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, receiver, message.getContent(), message.getSender());
 	}
 
 	@Before

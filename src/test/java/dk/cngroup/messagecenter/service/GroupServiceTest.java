@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
@@ -55,7 +57,7 @@ public class GroupServiceTest {
 
 		Device deviceOne = new Device("Device 1");
 		Device deviceTwo = new Device("Device 2");
-		Group actualGroup = groupService.assign(group, deviceOne, deviceTwo);
+		Group actualGroup = groupService.assign(group, Arrays.asList(deviceOne, deviceTwo));
 
 		assertEquals(2, actualGroup.getDevices().size());
 	}

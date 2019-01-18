@@ -2,7 +2,6 @@ package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.data.DeviceRepository;
 import dk.cngroup.messagecenter.model.Device;
-import dk.cngroup.messagecenter.service.Register;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,13 @@ public class DeviceService implements Register<Device> {
 		return repository.findByName(name);
 	}
 
+	public List<Device> findByNames(String... names) {
+		return repository.findByNameIn(names);
+	}
+
 	public List<Device> findAll() {
 		return repository.findAll();
 	}
+
+
 }

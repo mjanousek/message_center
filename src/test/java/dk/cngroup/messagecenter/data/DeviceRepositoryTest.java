@@ -12,6 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -68,6 +71,20 @@ public class DeviceRepositoryTest {
 		Device actualDevice = deviceRepository.findByName("Non existing device");
 
 		assertNull(actualDevice);
+	}
+
+	@Test
+	public void findAllDevicesByNamesTest() {
+		Device originalDeviceOne = new Device("Device 1");
+		Device originalDeviceTwo = new Device("Device 2");
+		List<Device> originalDevices = Arrays.asList(originalDeviceOne, originalDeviceTwo);
+		deviceRepository.save(originalDeviceOne);
+		deviceRepository.save(originalDeviceTwo);
+
+		List<Device> actualDevices = deviceRepository.findByNameIn(new String[]{"Device 1", "Device 2"});
+
+		assertEquals(2, actualDevices.size());
+		assertEquals(originalDevices, actualDevices);
 	}
 
 	@Before

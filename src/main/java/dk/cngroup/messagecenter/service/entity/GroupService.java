@@ -3,10 +3,11 @@ package dk.cngroup.messagecenter.service.entity;
 import dk.cngroup.messagecenter.data.GroupRepository;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
-import dk.cngroup.messagecenter.service.Register;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -36,8 +37,8 @@ public class GroupService implements Register<Group> {
 		return repository.save(group);
 	}
 
-	public Group assign(Group group, Device... devices) {
-		Set<Device> deviceSet = Set.of(devices);
+	public Group assign(Group group, List<Device> devices) {
+		Set<Device> deviceSet = new HashSet<>(devices);
 		group.assignDevices(deviceSet);
 		return repository.save(group);
 	}
