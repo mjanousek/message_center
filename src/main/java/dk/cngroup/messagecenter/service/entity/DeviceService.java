@@ -20,7 +20,7 @@ public class DeviceService implements Register<Device> {
 	@Override
 	public Device register(Device device) {
 		if (repository.existsById(device.getName())) {
-			throw new IllegalArgumentException("Device is already registered");
+			throw new IllegalArgumentException("Device '" + device.getName() + "' is already registered");
 		}
 		return repository.save(device);
 	}

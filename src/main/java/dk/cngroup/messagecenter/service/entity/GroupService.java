@@ -23,7 +23,7 @@ public class GroupService implements Register<Group> {
 	@Override
 	public Group register(Group group) {
 		if (repository.existsById(group.getName())) {
-			throw new IllegalArgumentException("Group is already registered");
+			throw new IllegalArgumentException("Group '" + group.getName() + "' is already registered");
 		}
 		return repository.save(group);
 	}

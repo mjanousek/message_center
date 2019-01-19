@@ -14,18 +14,29 @@ public class ObjectGenerator {
 
 	public List<Device> generateDeviceList(int number, String namePrefix) {
 		List<Device> devices = new LinkedList<>();
+		namePrefix += "_";
 		for (int i = 0; i < number; i++) {
-			devices.add(new Device(namePrefix + "_" + number));
+			devices.add(new Device(namePrefix + i));
 		}
 		return devices;
 	}
 
 	public List<Group> generateGroupList(int number, String namePrefix) {
 		List<Group> groups = new LinkedList<>();
+		namePrefix += "_";
 		for (int i = 0; i < number; i++) {
-			groups.add(new Group(namePrefix + "_" + number));
+			groups.add(new Group(namePrefix + i));
 		}
 		return groups;
+	}
+
+	public List<String> generateNameList(int number, String prefix) {
+		List<String> names = new LinkedList<>();
+		prefix += "_";
+		for (int i = 0; i < number; i++) {
+			names.add(prefix + i);
+		}
+		return names;
 	}
 
 	public Set<Device> generateDeviceSet(int number, String namePrefix) {

@@ -16,11 +16,7 @@ public class Group {
 	@Id
 	private String name;
 
-	@ManyToMany(fetch = FetchType.LAZY,
-			cascade = {
-					CascadeType.PERSIST,
-					CascadeType.MERGE
-			})
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "groups_devices",
 			joinColumns = {@JoinColumn(name = "group_id")},
 			inverseJoinColumns = {@JoinColumn(name = "device_id")})

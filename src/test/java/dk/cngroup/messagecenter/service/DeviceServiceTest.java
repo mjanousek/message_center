@@ -15,6 +15,9 @@ import static org.mockito.Mockito.*;
 
 public class DeviceServiceTest {
 
+	private static final String DEVICE = "Device";
+	private static final String REGISTERED_DEVICE = "Registered device";
+
 	@InjectMocks
 	DeviceService deviceService;
 
@@ -28,10 +31,9 @@ public class DeviceServiceTest {
 
 	@Test
 	public void findByNameReturnsDeviceInstanceTest(){
-		Device dummyDevice = new Device("Dummy device");
+		Device dummyDevice = new Device(DEVICE);
 		when(deviceRepository.findByName(anyString())).thenReturn(dummyDevice);
-
-		Device result = deviceService.findByName("Dummy device");
+		Device result = deviceService.findByName(DEVICE);
 
 		assertEquals(result, dummyDevice);
 	}
@@ -39,16 +41,16 @@ public class DeviceServiceTest {
 	@Test
 	public void registerUnregisteredDeviceTest(){
 		when(deviceRepository.existsById(any())).thenReturn(false);
-		when(deviceRepository.existsById("Registered device")).thenReturn(true);
+		when(deviceRepository.existsById(REGISTERED_DEVICE)).thenReturn(true);
 
-		deviceService.register(new Device("Dummy device"));
+		deviceService.register(new Device(DEVICE));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void registerRegisteredDeviceTest(){
 		when(deviceRepository.existsById(any())).thenReturn(false);
-		when(deviceRepository.existsById("Registered device")).thenReturn(true);
+		when(deviceRepository.existsById(REGISTERED_DEVICE)).thenReturn(true);
 
-		deviceService.register(new Device("Registered device"));
+		deviceService.register(new Device(REGISTERED_DEVICE));
 	}
 }

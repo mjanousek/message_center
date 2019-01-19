@@ -3,6 +3,7 @@ package dk.cngroup.messagecenter.data;
 import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.config.DataConfig;
 import dk.cngroup.messagecenter.model.Device;
+import dk.cngroup.messagecenter.service.ObjectGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,31 +19,39 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class})
+@SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class, ObjectGenerator.class})
 public class DeviceRepositoryTest {
+
+	private static final String DEVICE_NAME = "Device";
 
 	@Autowired
 	DeviceRepository deviceRepository;
 
+	@Autowired
+	private ObjectGenerator generator;
+
+	@Before
+	@After
+	public void cleanDb() {
+		deviceRepository.deleteAll();
+	}
+
 	@Test
-	@Transactional
 	public void countEmptyDatabaseTest() {
 		assertEquals(0, deviceRepository.count());
 	}
 
 	@Test
 	public void countTwoSavedDevicesBookTest() {
-		Device first = new Device("Device 1");
-		Device second = new Device("Device 2");
-		deviceRepository.save(first);
-		deviceRepository.save(second);
+		List<Device> devices = generator.generateDeviceList(2, DEVICE_NAME);
+		devices.forEach(deviceRepository::save);
 
 		assertEquals(2, deviceRepository.count());
 	}
 
 	@Test
-	public void saveAndRetrieveEntityTest() {
-		Device originalDevice = new Device("Device 1");
+	public void findExistingDeviceByNameTest() {
+		Device originalDevice = new Device(DEVICE_NAME);
 		deviceRepository.save(originalDevice);
 		Device actualDevice = deviceRepository.findByName(originalDevice.getName());
 
@@ -51,23 +60,9 @@ public class DeviceRepositoryTest {
 	}
 
 	@Test
-	public void findExistingDeviceByNameTest() {
-		String deviceName = "Device";
-		Device originalDevice = new Device(deviceName);
-		deviceRepository.save(originalDevice);
-
-		Device actualDevice = deviceRepository.findByName(deviceName);
-
-		assertNotNull(actualDevice);
-		assertEquals(originalDevice, actualDevice);
-	}
-
-	@Test
 	public void findNonExistingDeviceByNameTest() {
-		String deviceName = "Device";
-		Device originalDevice = new Device(deviceName);
+		Device originalDevice = new Device(DEVICE_NAME);
 		deviceRepository.save(originalDevice);
-
 		Device actualDevice = deviceRepository.findByName("Non existing device");
 
 		assertNull(actualDevice);
@@ -75,21 +70,12 @@ public class DeviceRepositoryTest {
 
 	@Test
 	public void findAllDevicesByNamesTest() {
-		Device originalDeviceOne = new Device("Device 1");
-		Device originalDeviceTwo = new Device("Device 2");
-		List<Device> originalDevices = Arrays.asList(originalDeviceOne, originalDeviceTwo);
-		deviceRepository.save(originalDeviceOne);
-		deviceRepository.save(originalDeviceTwo);
-
-		List<Device> actualDevices = deviceRepository.findByNameIn(new String[]{"Device 1", "Device 2"});
+		List<Device> originalDevices = generator.generateDeviceList(2, DEVICE_NAME);
+		String[] deviceNames = originalDevices.stream().map(Device::getName).toArray(String[]::new);
+		originalDevices.forEach(deviceRepository::save);
+		List<Device> actualDevices = deviceRepository.findByNameIn(deviceNames);
 
 		assertEquals(2, actualDevices.size());
 		assertEquals(originalDevices, actualDevices);
-	}
-
-	@Before
-	@After
-	public void cleanDb() {
-		deviceRepository.deleteAll();
 	}
 }

@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import static dk.cngroup.messagecenter.service.ConsoleShipper.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
@@ -22,8 +21,11 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MessageCenterApplication.class)
+@SpringBootTest(classes = {MessageCenterApplication.class, ObjectGenerator.class})
 public class ConsoleShipperTest {
+
+	private static final String DEVICE_NAME = "Device";
+	private static final String MESSAGE_CONTENT = "Hello World";
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
@@ -31,40 +33,8 @@ public class ConsoleShipperTest {
 	@Autowired
 	ConsoleShipper consoleShipper;
 
-	@Test
-	public void sendMessageToOneDeviceTest() {
-		Device device = new Device("Device 1");
-		String content = "Hello World";
-		Message message = new Message(null, Collections.singleton(device), content);
-
-		consoleShipper.send(message);
-
-		String expected = getMessage(device, message);
-		assertThat(outContent.toString(), containsString(expected));
-	}
-
-	@Test
-	public void sendMessageToMoreDevicesTest() {
-		Device deviceOne = new Device("Device 1");
-		Device deviceTwo = new Device("Device 2");
-		Set<Device> devices = new HashSet<>();
-		devices.add(deviceOne);
-		devices.add(deviceTwo);
-		String content = "Hello World";
-		Message message = new Message(null, devices, content);
-
-		consoleShipper.send(message);
-
-		String expectedMessageOne = getMessage(deviceOne, message);
-		String expectedMessageTwo = getMessage(deviceTwo, message);
-
-		assertThat(outContent.toString(), containsString(expectedMessageOne));
-		assertThat(outContent.toString(), containsString(expectedMessageTwo));
-	}
-
-	private String getMessage(Device receiver, Message message) {
-		return String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, receiver, message.getContent(), message.getSender());
-	}
+	@Autowired
+	ObjectGenerator generator;
 
 	@Before
 	public void setUpStream() {
@@ -74,5 +44,31 @@ public class ConsoleShipperTest {
 	@After
 	public void restoreStream() {
 		System.setOut(originalOut);
+	}
+
+	@Test
+	public void sendMessageToOneDeviceTest() {
+		Device device = new Device(DEVICE_NAME);
+		Message message = new Message(null, Collections.singleton(device), MESSAGE_CONTENT);
+		consoleShipper.send(message);
+
+		String expected = getMessage(device, message);
+		assertThat(outContent.toString(), containsString(expected));
+	}
+
+	@Test
+	public void sendMessageToMoreDevicesTest() {
+		Set<Device> devices = generator.generateDeviceSet(2, DEVICE_NAME);
+		Message message = new Message(null, devices, MESSAGE_CONTENT);
+		consoleShipper.send(message);
+
+		for (Device device : devices) {
+			String expectedMessage = getMessage(device, message);
+			assertThat(outContent.toString(), containsString(expectedMessage));
+		}
+	}
+
+	private String getMessage(Device receiver, Message message) {
+		return String.format(DEVICE_RECEIVED_MESSAGE_TEMPLATE, receiver, message.getContent(), message.getSender());
 	}
 }

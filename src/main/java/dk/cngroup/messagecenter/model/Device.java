@@ -13,10 +13,6 @@ public class Device {
 	private String name;
 
 	@ManyToMany(fetch = FetchType.LAZY,
-			cascade = {
-					CascadeType.PERSIST,
-					CascadeType.MERGE
-			},
 			mappedBy = "devices")
 	private Set<Group> groups = new HashSet<>();
 
