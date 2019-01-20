@@ -1,4 +1,4 @@
-package dk.cngroup.messagecenter.commandline.Command;
+package dk.cngroup.messagecenter.commandline.command;
 
 import java.util.List;
 
@@ -10,5 +10,6 @@ public class RegisterGroupCommand extends Command {
 
 	@Override
 	public void execute() {
+		registerApiService.registerGroup(params.get(0));
 	}
 }

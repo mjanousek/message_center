@@ -1,4 +1,4 @@
-package dk.cngroup.messagecenter.commandline.Command;
+package dk.cngroup.messagecenter.commandline.command;
 
 import java.util.List;
 
@@ -8,10 +8,8 @@ public class RegisterDeviceCommand extends Command {
 		super(params);
 	}
 
-	public RegisterDeviceCommand(String[] commandWitParams) {
-	}
-
 	@Override
 	public void execute() {
+		registerApiService.registerDevice(params.get(0));
 	}
 }

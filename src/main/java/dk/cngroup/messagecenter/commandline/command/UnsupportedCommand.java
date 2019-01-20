@@ -1,4 +1,4 @@
-package dk.cngroup.messagecenter.commandline.Command;
+package dk.cngroup.messagecenter.commandline.command;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public class UnsupportedCommand extends Command {
 
 	@Override
 	public void execute() {
-		System.out.println("Command is not supported. Run HELP for list of supported commands.");
+		System.out.println("command is not supported. Run HELP for list of supported commands.");
 	}
 }

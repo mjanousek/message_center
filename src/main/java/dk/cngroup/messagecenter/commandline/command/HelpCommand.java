@@ -1,4 +1,4 @@
-package dk.cngroup.messagecenter.commandline.Command;
+package dk.cngroup.messagecenter.commandline.command;
 
 import java.util.List;
 

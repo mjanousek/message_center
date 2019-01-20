@@ -1,6 +1,6 @@
 package dk.cngroup.messagecenter.commandline;
 
-import dk.cngroup.messagecenter.commandline.Command.Command;
+import dk.cngroup.messagecenter.commandline.command.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,7 @@ public class CommandLineService implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		Scanner input = new Scanner(System.in);
+		System.out.println("... Application is running ...");
 		while (input.hasNext()) {
 			String command = input.nextLine();
 			if (shouldQuit(command)) {
@@ -30,7 +31,11 @@ public class CommandLineService implements CommandLineRunner {
 	}
 
 	private void execute(String command) {
-		Command c = commandFactory.createCommand(command);
-		c.execute();
+		try {
+			Command c = commandFactory.createCommand(command);
+			c.execute();
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 }
