@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessageService {
+public class MessageApiService {
 
 	@Autowired
 	MessageCenter messageCenter;

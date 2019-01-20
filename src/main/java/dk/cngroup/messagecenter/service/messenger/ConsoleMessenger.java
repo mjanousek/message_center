@@ -1,11 +1,11 @@
-package dk.cngroup.messagecenter.service;
+package dk.cngroup.messagecenter.service.messenger;
 
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Message;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ConsoleShipper implements Shipper {
+public class ConsoleMessenger implements Messenger {
 
 	public static final String DEVICE_RECEIVED_MESSAGE_TEMPLATE = "Device '%s' received message '%s' from device '%s'";
 

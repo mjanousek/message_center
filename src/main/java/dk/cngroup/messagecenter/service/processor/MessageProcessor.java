@@ -1,4 +1,4 @@
-package dk.cngroup.messagecenter.processor;
+package dk.cngroup.messagecenter.service.processor;
 
 import dk.cngroup.messagecenter.model.Message;
 

@@ -26,13 +26,13 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class, ObjectGenerator.class})
 @Transactional
-public class RegisterServiceTest {
+public class RegisterApiServiceTest {
 
 	private static final String DEVICE_NAME = "Device";
 	private static final String GROUP_NAME = "Group";
 
 	@Autowired
-	private RegisterService service;
+	private RegisterApiService service;
 
 	@Autowired
 	private GroupRepository groupRepository;
@@ -67,12 +67,12 @@ public class RegisterServiceTest {
 		register(3, DEVICE_NAME, service::registerDevice);
 		register(2, GROUP_NAME, service::registerGroup);
 
-		service.assignDeviceToGroup(GROUP_NAME + "_0", DEVICE_NAME + "_0", DEVICE_NAME + "_1");
-		service.assignDeviceToGroup(GROUP_NAME + "_0", DEVICE_NAME + "_2");
-		service.assignDeviceToGroup(GROUP_NAME + "_1", DEVICE_NAME + "_2");
+		service.assignDeviceToGroup(GROUP_NAME + "0", DEVICE_NAME + "0", DEVICE_NAME + "1");
+		service.assignDeviceToGroup(GROUP_NAME + "0", DEVICE_NAME + "2");
+		service.assignDeviceToGroup(GROUP_NAME + "1", DEVICE_NAME + "2");
 
-		Group groupOne = groupRepository.findByName(GROUP_NAME + "_0");
-		Group groupTwo = groupRepository.findByName(GROUP_NAME + "_1");
+		Group groupOne = groupRepository.findByName(GROUP_NAME + "0");
+		Group groupTwo = groupRepository.findByName(GROUP_NAME + "1");
 
 		assertEquals(3, groupOne.getDevices().size());
 		assertEquals(1, groupTwo.getDevices().size());

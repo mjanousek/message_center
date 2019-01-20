@@ -8,7 +8,6 @@ public class Message {
 	private Device sender;
 	private Set<Device> receivers;
 	private String content;
-	private List<String> keywords; // TODO fill or remove to different class
 
 	public Message() {
 	}
@@ -43,14 +42,6 @@ public class Message {
 		this.content = content;
 	}
 
-	public List<String> getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(List<String> keywords) {
-		this.keywords = keywords;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -58,12 +49,20 @@ public class Message {
 		Message message = (Message) o;
 		return Objects.equals(sender, message.sender) &&
 				Objects.equals(receivers, message.receivers) &&
-				Objects.equals(content, message.content) &&
-				Objects.equals(keywords, message.keywords);
+				Objects.equals(content, message.content);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(sender, receivers, content, keywords);
+		return Objects.hash(sender, receivers, content);
+	}
+
+	@Override
+	public String toString() {
+		return "Message{" +
+				"sender=" + sender +
+				", receivers=" + receivers +
+				", content='" + content + '\'' +
+				'}';
 	}
 }

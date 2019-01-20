@@ -1,7 +1,8 @@
 package dk.cngroup.messagecenter.service;
 
 import dk.cngroup.messagecenter.model.Message;
-import dk.cngroup.messagecenter.processor.MessageProcessor;
+import dk.cngroup.messagecenter.service.messenger.Messenger;
+import dk.cngroup.messagecenter.service.processor.MessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,15 @@ public class MessageCenter {
 
 	@Autowired
 	/* The second option how to implement this is usage of Acpects but
-	* I have to limit usage of Spring as it is writtent in the assignment*/
+	* I have to limit usage of Spring and Java dependencies to th essentials as
+	* it is written in the assignment*/
 	private Set<MessageProcessor> processors;
 
 	@Autowired
-	private Shipper shipper;
+	private Messenger messenger;
 
 	public void process(Message message) {
-		for (MessageProcessor processor : processors) {
-			processor.process(message);
-		}
-		shipper.send(message);
+		processors.forEach(p -> p.process(message));
+		messenger.send(message);
 	}
 }

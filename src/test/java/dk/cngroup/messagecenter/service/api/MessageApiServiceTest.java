@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
-import static dk.cngroup.messagecenter.service.ConsoleShipper.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
+import static dk.cngroup.messagecenter.service.messenger.ConsoleMessenger.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -31,7 +31,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class, ObjectGenerator.class})
 @Transactional
-public class MessageServiceTest {
+public class MessageApiServiceTest {
 
 	private static final String SENDER_NAME = "Sender";
 	private static final String RECEIVER_NAME = "Receiver";
@@ -42,7 +42,7 @@ public class MessageServiceTest {
 	private final PrintStream originalOut = System.out;
 
 	@Autowired
-	private MessageService messageService;
+	private MessageApiService messageApiService;
 
 	@Autowired
 	private GroupRepository groupRepository;
@@ -51,7 +51,7 @@ public class MessageServiceTest {
 	private DeviceRepository deviceRepository;
 
 	@Autowired
-	private RegisterService registerService;
+	private RegisterApiService registerApiService;
 
 	@Autowired
 	private ObjectGenerator generator;
@@ -80,9 +80,9 @@ public class MessageServiceTest {
 		Device receiver = new Device(RECEIVER_NAME);
 		Message message = new Message(sender, Collections.singleton(receiver), content);
 
-		registerService.registerDevice(SENDER_NAME);
-		registerService.registerDevice(RECEIVER_NAME);
-		messageService.peerToPeer(SENDER_NAME, RECEIVER_NAME, content);
+		registerApiService.registerDevice(SENDER_NAME);
+		registerApiService.registerDevice(RECEIVER_NAME);
+		messageApiService.peerToPeer(SENDER_NAME, RECEIVER_NAME, content);
 
 		String expected = getMessage(receiver, message);
 		assertThat(outContent.toString(), containsString(expected));
@@ -96,13 +96,13 @@ public class MessageServiceTest {
 		Message message = new Message(sender, receivers, content);
 		List<String> expectedMessages = new LinkedList<>();
 
-		registerService.registerDevice(sender.getName());
+		registerApiService.registerDevice(sender.getName());
 		for (Device device : receivers) {
-			registerService.registerDevice(device.getName());
+			registerApiService.registerDevice(device.getName());
 			expectedMessages.add(getMessage(device, message));
 		}
 
-		messageService.broadcast(SENDER_NAME, content);
+		messageApiService.broadcast(SENDER_NAME, content);
 
 		for (String expected : expectedMessages) {
 			assertThat(outContent.toString(), containsString(expected));
@@ -119,21 +119,21 @@ public class MessageServiceTest {
 		List<String> expectedMessages = new LinkedList<>();
 
 		for (Group group : groups) {
-			registerService.registerGroup(group.getName());
+			registerApiService.registerGroup(group.getName());
 		}
 
-		registerService.registerDevice(sender.getName());
+		registerApiService.registerDevice(sender.getName());
 		for (int i = 0; i < devices.size(); i++) {
 			String deviceName = devices.get(i).getName();
 			String groupName = groups.get(i%2).getName();
-			registerService.registerDevice(deviceName);
-			registerService.assignDeviceToGroup(groupName, deviceName);
+			registerApiService.registerDevice(deviceName);
+			registerApiService.assignDeviceToGroup(groupName, deviceName);
 			if (i % 2 == 0) {
 				expectedMessages.add(getMessage(devices.get(i), message));
 			}
 		}
 
-		messageService.multicast(SENDER_NAME, groups.get(0).getName(), content);
+		messageApiService.multicast(SENDER_NAME, groups.get(0).getName(), content);
 
 		for (String expected : expectedMessages) {
 			assertThat(outContent.toString(), containsString(expected));

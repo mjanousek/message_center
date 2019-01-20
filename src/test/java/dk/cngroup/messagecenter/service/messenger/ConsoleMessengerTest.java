@@ -1,8 +1,9 @@
-package dk.cngroup.messagecenter.service;
+package dk.cngroup.messagecenter.service.messenger;
 
 import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Message;
+import dk.cngroup.messagecenter.service.ObjectGenerator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +17,13 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.Set;
 
-import static dk.cngroup.messagecenter.service.ConsoleShipper.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
+import static dk.cngroup.messagecenter.service.messenger.ConsoleMessenger.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {MessageCenterApplication.class, ObjectGenerator.class})
-public class ConsoleShipperTest {
+public class ConsoleMessengerTest {
 
 	private static final String DEVICE_NAME = "Device";
 	private static final String MESSAGE_CONTENT = "Hello World";
@@ -31,7 +32,7 @@ public class ConsoleShipperTest {
 	private final PrintStream originalOut = System.out;
 
 	@Autowired
-	ConsoleShipper consoleShipper;
+	ConsoleMessenger consoleShipper;
 
 	@Autowired
 	ObjectGenerator generator;

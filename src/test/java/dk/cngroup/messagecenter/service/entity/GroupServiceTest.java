@@ -1,9 +1,10 @@
-package dk.cngroup.messagecenter.service;
+package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.data.GroupRepository;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
+import dk.cngroup.messagecenter.service.ObjectGenerator;
 import dk.cngroup.messagecenter.service.entity.GroupService;
 import org.junit.Before;
 import org.junit.Test;
