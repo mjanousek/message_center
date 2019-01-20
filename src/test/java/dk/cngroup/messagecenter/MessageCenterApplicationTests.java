@@ -15,18 +15,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static dk.cngroup.messagecenter.TestUtils.getDeviceName;
+import static dk.cngroup.messagecenter.TestUtils.getGroupName;
+
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = {MessageCenterApplication.class, ObjectGenerator.class})
 public class MessageCenterApplicationTests {
-
-	private static final String GROUP_NAME = "Group";
-	private static final String DEVICE_NAME = "Device";
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
@@ -100,18 +102,6 @@ public class MessageCenterApplicationTests {
 		registerApiService.assignDeviceToGroup(getGroupName(0), getDeviceName(0), getDeviceName(1), getDeviceName(4));
 		registerApiService.assignDeviceToGroup(getGroupName(1), getDeviceName(0), getDeviceName(5));
 		registerApiService.assignDeviceToGroup(getGroupName(2), getDeviceName(0), getDeviceName(4), getDeviceName(7), getDeviceName(8));
-	}
-
-	private String getName(String name, int number) {
-		return name + number;
-	}
-
-	private String getGroupName(int number) {
-		return getName(GROUP_NAME, number);
-	}
-
-	private String getDeviceName(int number) {
-		return getName(DEVICE_NAME, number);
 	}
 
 	private void register(int number, String prefix, Consumer<? super String> method) {

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.ByteArrayOutputStream;
@@ -17,15 +18,16 @@ import java.io.PrintStream;
 import java.util.Collections;
 import java.util.Set;
 
+import static dk.cngroup.messagecenter.TestUtils.DEVICE_NAME;
 import static dk.cngroup.messagecenter.service.messenger.ConsoleMessenger.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = {MessageCenterApplication.class, ObjectGenerator.class})
 public class ConsoleMessengerTest {
 
-	private static final String DEVICE_NAME = "Device";
 	private static final String MESSAGE_CONTENT = "Hello World";
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

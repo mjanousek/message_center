@@ -9,7 +9,9 @@ import dk.cngroup.messagecenter.service.factory.GroupFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RegisterApiService {
@@ -32,7 +34,24 @@ public class RegisterApiService {
 
 	public void assignDeviceToGroup(String groupId, String... deviceIds){
 		Group group = groupService.findByName(groupId);
+		checkIfEntityIsRegistered(Group.class, groupId, group);
 		List<Device> devices = deviceService.findByNames(deviceIds);
+		checkIfDevicesAreRegistered(devices, deviceIds);
 		groupService.assign(group, devices);
+	}
+
+	private void checkIfDevicesAreRegistered(List<Device> devices, String[] deviceIds) {
+		if (deviceIds.length != devices.size()) {
+			List<String> unregisteredDevices = Arrays.stream(deviceIds)
+					.filter(id -> !devices.contains(new Device(id)))
+					.collect(Collectors.toList());
+			throw new IllegalArgumentException("Devices '" + unregisteredDevices + "' are not registered");
+		}
+	}
+
+	public static void checkIfEntityIsRegistered(Class<?> type, String id, Object entity) {
+		if (entity == null) {
+			throw new IllegalArgumentException(type.getSimpleName() + " '" + id + "' is not registered");
+		}
 	}
 }

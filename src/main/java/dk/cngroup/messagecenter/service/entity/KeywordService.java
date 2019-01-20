@@ -17,8 +17,11 @@ public class KeywordService {
 		this.repository = repository;
 	}
 
-	public Keyword add(Keyword device) {
-		return repository.save(device);
+	public Keyword add(Keyword keyword) {
+		if (repository.existsById(keyword.getWord())) {
+			throw new IllegalArgumentException("Keyword '" + keyword.getWord() + "' is already in the system");
+		}
+		return repository.save(keyword);
 	}
 
 	public List<Keyword> findAll() {

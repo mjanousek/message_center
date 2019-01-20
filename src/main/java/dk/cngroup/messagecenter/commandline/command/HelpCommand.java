@@ -16,6 +16,7 @@ public class HelpCommand extends Command {
 	public void execute() {
 		System.out.println("Help - commands:\n" +
 				"\t- HELP\n" +
+				"\t- EXIT" +
 				"\t- REG_G <group_name>\n" +
 				"\t- REG_D <device_name>\n" +
 				"\t- ASG <group_name> <device_name>[,<device_name>]\n" +

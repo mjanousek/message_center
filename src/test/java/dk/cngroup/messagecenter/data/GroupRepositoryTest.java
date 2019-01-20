@@ -11,20 +11,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static dk.cngroup.messagecenter.TestUtils.DEVICE_NAME;
+import static dk.cngroup.messagecenter.TestUtils.GROUP_NAME;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class, ObjectGenerator.class})
 public class GroupRepositoryTest {
-
-	private static final String GROUP_NAME = "Group";
-	private static final String DEVICE_NAME = "Device";
 
 	@Autowired
 	GroupRepository groupRepository;
@@ -39,6 +40,7 @@ public class GroupRepositoryTest {
 	@After
 	public void cleanDb() {
 		groupRepository.deleteAll();
+		deviceRepository.deleteAll();
 	}
 
 	@Test

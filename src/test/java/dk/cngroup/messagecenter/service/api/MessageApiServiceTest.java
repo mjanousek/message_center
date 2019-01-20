@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 
+import static dk.cngroup.messagecenter.TestUtils.DEVICE_NAME;
+import static dk.cngroup.messagecenter.TestUtils.GROUP_NAME;
 import static dk.cngroup.messagecenter.service.messenger.ConsoleMessenger.DEVICE_RECEIVED_MESSAGE_TEMPLATE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -29,14 +32,13 @@ import static org.junit.Assert.assertThat;
  * This is integration test simulates sending messages between devices
  */
 @RunWith(SpringRunner.class)
+@ActiveProfiles("test")
 @SpringBootTest(classes = {MessageCenterApplication.class, DataConfig.class, ObjectGenerator.class})
 @Transactional
 public class MessageApiServiceTest {
 
 	private static final String SENDER_NAME = "Sender";
 	private static final String RECEIVER_NAME = "Receiver";
-	private static final String DEVICE_NAME = "Device";
-	private static final String GROUP_NAME = "Group";
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
@@ -88,6 +90,20 @@ public class MessageApiServiceTest {
 		assertThat(outContent.toString(), containsString(expected));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void peerToPeerFromUnregisteredDeviceTest() {
+		String content = "Hi my friend!";
+		registerApiService.registerDevice(RECEIVER_NAME);
+		messageApiService.peerToPeer(SENDER_NAME, RECEIVER_NAME, content);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void peerToPeerToUnregisteredDeviceTest() {
+		String content = "Hi my friend!";
+		registerApiService.registerDevice(SENDER_NAME);
+		messageApiService.peerToPeer(SENDER_NAME, RECEIVER_NAME, content);
+	}
+
 	@Test
 	public void broadcastTest() {
 		String content = "Hi my friends!";
@@ -107,6 +123,12 @@ public class MessageApiServiceTest {
 		for (String expected : expectedMessages) {
 			assertThat(outContent.toString(), containsString(expected));
 		}
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void broadcastFromUnregisteredDeviceTest() {
+		String content = "Hi my friend!";
+		messageApiService.broadcast(SENDER_NAME, content);
 	}
 
 	@Test
@@ -138,6 +160,20 @@ public class MessageApiServiceTest {
 		for (String expected : expectedMessages) {
 			assertThat(outContent.toString(), containsString(expected));
 		}
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void multicastFromUnregisteredDeviceTest() {
+		String content = "Hi my friend!";
+		registerApiService.registerGroup(GROUP_NAME);
+		messageApiService.multicast(SENDER_NAME, GROUP_NAME, content);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void multicastToUnregisteredGroupTest() {
+		String content = "Hi my friend!";
+		registerApiService.registerDevice(SENDER_NAME);
+		messageApiService.multicast(SENDER_NAME, GROUP_NAME, content);
 	}
 
 	private String getMessage(Device receiver, Message message) {

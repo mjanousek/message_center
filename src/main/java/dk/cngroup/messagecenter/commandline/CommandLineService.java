@@ -3,11 +3,13 @@ package dk.cngroup.messagecenter.commandline;
 import dk.cngroup.messagecenter.commandline.command.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
 @Component
+@Profile("!test")
 public class CommandLineService implements CommandLineRunner {
 
 	@Autowired
