@@ -9,7 +9,7 @@ public class Log {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 5000)
+	@Column(length = 1000)
 	private String message;
 
 	public Log() {

@@ -1,6 +1,7 @@
 package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.data.DeviceRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Device;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class DeviceServiceTest {
 		service.register(new Device(DEVICE));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void registerRegisteredDeviceTest() {
 		when(repository.existsById(any())).thenReturn(false);
 		when(repository.existsById(REGISTERED_DEVICE)).thenReturn(true);

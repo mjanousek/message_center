@@ -4,7 +4,6 @@ import dk.cngroup.messagecenter.data.DeviceRepository;
 import dk.cngroup.messagecenter.data.GroupRepository;
 import dk.cngroup.messagecenter.data.KeywordRepository;
 import dk.cngroup.messagecenter.data.LogRepository;
-import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.service.ObjectGenerator;
 import dk.cngroup.messagecenter.service.api.KeywordApiService;
 import dk.cngroup.messagecenter.service.api.MessageApiService;
@@ -33,16 +32,29 @@ public class MessageCenterApplicationTests {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
 
-	@Autowired private MessageApiService messageApiService;
-	@Autowired private RegisterApiService registerApiService;
-	@Autowired private KeywordApiService keywordApiService;
+	@Autowired
+	private MessageApiService messageApiService;
 
-	@Autowired private GroupRepository groupRepository;
-	@Autowired private DeviceRepository deviceRepository;
-	@Autowired private KeywordRepository keywordRepository;
-	@Autowired private LogRepository logRepository;
+	@Autowired
+	private RegisterApiService registerApiService;
 
-	@Autowired private ObjectGenerator generator;
+	@Autowired
+	private KeywordApiService keywordApiService;
+
+	@Autowired
+	private GroupRepository groupRepository;
+
+	@Autowired
+	private DeviceRepository deviceRepository;
+
+	@Autowired
+	private KeywordRepository keywordRepository;
+
+	@Autowired
+	private LogRepository logRepository;
+
+	@Autowired
+	private ObjectGenerator generator;
 
 	@Before
 	public void setUpStream() {
@@ -95,13 +107,12 @@ public class MessageCenterApplicationTests {
 		messageApiService.multicast(getDeviceName(8), getGroupName(0), "Hi group 0! (Devices 0,1,4)");
 		messageApiService.multicast(getDeviceName(9), getGroupName(1), "Hi group 1! (Devices 0,5) [word1, word, word4]");
 		messageApiService.multicast(getDeviceName(3), getGroupName(2), "Hi group 2! (Devices 0,4,7,8)");
-
 	}
 
 	private void assignDevicesToGroups() {
-		registerApiService.assignDeviceToGroup(getGroupName(0), getDeviceName(0), getDeviceName(1), getDeviceName(4));
-		registerApiService.assignDeviceToGroup(getGroupName(1), getDeviceName(0), getDeviceName(5));
-		registerApiService.assignDeviceToGroup(getGroupName(2), getDeviceName(0), getDeviceName(4), getDeviceName(7), getDeviceName(8));
+		registerApiService.assignDevicesToGroup(getGroupName(0), getDeviceName(0), getDeviceName(1), getDeviceName(4));
+		registerApiService.assignDevicesToGroup(getGroupName(1), getDeviceName(0), getDeviceName(5));
+		registerApiService.assignDevicesToGroup(getGroupName(2), getDeviceName(0), getDeviceName(4), getDeviceName(7), getDeviceName(8));
 	}
 
 	private void register(int number, String prefix, Consumer<? super String> method) {
@@ -112,7 +123,7 @@ public class MessageCenterApplicationTests {
 	private void writeOutputToFile() {
 		try (PrintWriter writer = new PrintWriter("out/out.txt", "UTF-8")) {
 			writer.println(outContent);
-		} catch (FileNotFoundException|UnsupportedEncodingException e) {
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}

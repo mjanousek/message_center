@@ -3,7 +3,6 @@ package dk.cngroup.messagecenter.commandline.command;
 import dk.cngroup.messagecenter.service.api.KeywordApiService;
 import dk.cngroup.messagecenter.service.api.MessageApiService;
 import dk.cngroup.messagecenter.service.api.RegisterApiService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

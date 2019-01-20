@@ -13,6 +13,6 @@ public class AssignCommand extends Command {
 		String groupId = params.get(0);
 		String devicesString = params.get(1);
 		String[] deviceIds = devicesString.split(",");
-		registerApiService.assignDeviceToGroup(groupId, deviceIds);
+		registerApiService.assignDevicesToGroup(groupId, deviceIds);
 	}
 }

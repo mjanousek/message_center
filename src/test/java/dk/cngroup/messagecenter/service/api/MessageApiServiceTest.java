@@ -4,6 +4,7 @@ import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.config.DataConfig;
 import dk.cngroup.messagecenter.data.DeviceRepository;
 import dk.cngroup.messagecenter.data.GroupRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
 import dk.cngroup.messagecenter.model.Message;
@@ -90,14 +91,14 @@ public class MessageApiServiceTest {
 		assertThat(outContent.toString(), containsString(expected));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void peerToPeerFromUnregisteredDeviceTest() {
 		String content = "Hi my friend!";
 		registerApiService.registerDevice(RECEIVER_NAME);
 		messageApiService.peerToPeer(SENDER_NAME, RECEIVER_NAME, content);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void peerToPeerToUnregisteredDeviceTest() {
 		String content = "Hi my friend!";
 		registerApiService.registerDevice(SENDER_NAME);
@@ -125,7 +126,7 @@ public class MessageApiServiceTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void broadcastFromUnregisteredDeviceTest() {
 		String content = "Hi my friend!";
 		messageApiService.broadcast(SENDER_NAME, content);
@@ -147,9 +148,9 @@ public class MessageApiServiceTest {
 		registerApiService.registerDevice(sender.getName());
 		for (int i = 0; i < devices.size(); i++) {
 			String deviceName = devices.get(i).getName();
-			String groupName = groups.get(i%2).getName();
+			String groupName = groups.get(i % 2).getName();
 			registerApiService.registerDevice(deviceName);
-			registerApiService.assignDeviceToGroup(groupName, deviceName);
+			registerApiService.assignDevicesToGroup(groupName, deviceName);
 			if (i % 2 == 0) {
 				expectedMessages.add(getMessage(devices.get(i), message));
 			}
@@ -162,14 +163,14 @@ public class MessageApiServiceTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void multicastFromUnregisteredDeviceTest() {
 		String content = "Hi my friend!";
 		registerApiService.registerGroup(GROUP_NAME);
 		messageApiService.multicast(SENDER_NAME, GROUP_NAME, content);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = RegistrationException.class)
 	public void multicastToUnregisteredGroupTest() {
 		String content = "Hi my friend!";
 		registerApiService.registerDevice(SENDER_NAME);

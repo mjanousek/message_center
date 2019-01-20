@@ -4,6 +4,7 @@ import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.config.DataConfig;
 import dk.cngroup.messagecenter.data.DeviceRepository;
 import dk.cngroup.messagecenter.data.GroupRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Group;
 import dk.cngroup.messagecenter.service.ObjectGenerator;
 import org.junit.After;
@@ -67,9 +68,9 @@ public class RegisterApiServiceTest {
 		register(3, DEVICE_NAME, service::registerDevice);
 		register(2, GROUP_NAME, service::registerGroup);
 
-		service.assignDeviceToGroup(getGroupName(0), getDeviceName(0), getDeviceName(1));
-		service.assignDeviceToGroup(getGroupName(0), getDeviceName(2));
-		service.assignDeviceToGroup(getGroupName(1), getDeviceName(2));
+		service.assignDevicesToGroup(getGroupName(0), getDeviceName(0), getDeviceName(1));
+		service.assignDevicesToGroup(getGroupName(0), getDeviceName(2));
+		service.assignDevicesToGroup(getGroupName(1), getDeviceName(2));
 
 		Group groupOne = groupRepository.findByName(getGroupName(0));
 		Group groupTwo = groupRepository.findByName(getGroupName(1));
@@ -78,16 +79,16 @@ public class RegisterApiServiceTest {
 		assertEquals(1, groupTwo.getDevices().size());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void assignDeviceToUnregisteredGroup(){
+	@Test(expected = RegistrationException.class)
+	public void assignDeviceToUnregisteredGroup() {
 		register(1, DEVICE_NAME, service::registerDevice);
-		service.assignDeviceToGroup("Undegistered device", getDeviceName(1));
+		service.assignDevicesToGroup("Undegistered device", getDeviceName(1));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void assignUnregisteredDevicesToGroup(){
+	@Test(expected = RegistrationException.class)
+	public void assignUnregisteredDevicesToGroup() {
 		register(1, GROUP_NAME, service::registerGroup);
-		service.assignDeviceToGroup(GROUP_NAME, DEVICE_NAME);
+		service.assignDevicesToGroup(GROUP_NAME, DEVICE_NAME);
 	}
 
 	private void register(int number, String prefix, Consumer<? super String> method) {

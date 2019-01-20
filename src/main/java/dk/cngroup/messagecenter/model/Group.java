@@ -9,10 +9,6 @@ import java.util.Set;
 @Table(name = "groups")
 public class Group {
 
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-//	private Long id;
-
 	@Id
 	private String name;
 

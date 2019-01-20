@@ -25,7 +25,6 @@ import java.util.List;
 @SpringBootTest(classes = {MessageCenterApplication.class, ObjectGenerator.class})
 public class KeywordCounterMessageProcessorTest {
 
-
 	@InjectMocks
 	KeywordCounterMessageProcessor processor;
 

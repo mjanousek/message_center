@@ -1,6 +1,7 @@
 package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.data.KeywordRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Keyword;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class KeywordService {
 
 	public Keyword add(Keyword keyword) {
 		if (repository.existsById(keyword.getWord())) {
-			throw new IllegalArgumentException("Keyword '" + keyword.getWord() + "' is already in the system");
+			throw new RegistrationException("Keyword '" + keyword.getWord() + "' is already in the system");
 		}
 		return repository.save(keyword);
 	}

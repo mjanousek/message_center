@@ -39,7 +39,7 @@ public class MessageFactoryTest {
 
 
 	@Before
-	public void setUp(){
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		initData();
 		when(deviceService.findByName(DEVICE_1)).thenReturn(deviceOne);
@@ -47,6 +47,7 @@ public class MessageFactoryTest {
 		when(deviceService.findAll()).thenReturn(new ArrayList<>(devices));
 		when(groupService.findByName(GROUP)).thenReturn(groupOne);
 	}
+
 	@Test
 	public void createPerToPeerMessageTest() {
 		Message expected = new Message(deviceOne, Collections.singleton(deviceTwo), content);

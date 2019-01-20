@@ -41,11 +41,11 @@ public class KeywordCounterMessageProcessor implements MessageProcessor {
 	}
 
 	protected String createRegexForMatchingAllKeywords(List<Keyword> keywords) {
-		String keywordsDevidedByVerticalBar = keywords.stream()
+		String keywordsDividedByVerticalBar = keywords.stream()
 				.map(Keyword::getWord)
 				.collect(Collectors.joining("|"));
 
-		return String.format("(%s)", keywordsDevidedByVerticalBar);
+		return String.format("(%s)", keywordsDividedByVerticalBar);
 	}
 
 	protected List<String> findKeywordsByRegex(String text, String regex) {

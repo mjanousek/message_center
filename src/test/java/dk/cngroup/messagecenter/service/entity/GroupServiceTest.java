@@ -2,6 +2,7 @@ package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.MessageCenterApplication;
 import dk.cngroup.messagecenter.data.GroupRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
 import dk.cngroup.messagecenter.service.ObjectGenerator;
@@ -17,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static dk.cngroup.messagecenter.TestUtils.DEVICE_NAME;
@@ -43,12 +44,12 @@ public class GroupServiceTest {
 	ObjectGenerator generator;
 
 	@Before
-	public void setUp(){
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 	}
 
 	@Test
-	public void findByNameReturnsGroupInstanceTest(){
+	public void findByNameReturnsGroupInstanceTest() {
 		Group group = new Group(GROUP_NAME);
 		when(groupRepository.findByName(anyString())).thenReturn(group);
 
@@ -58,18 +59,18 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	public void assignOneDeviceToGroupTest(){
+	public void assignOneDeviceToGroupTest() {
 		Group group = new Group(GROUP_NAME);
 		when(groupRepository.save(group)).thenReturn(group);
 
 		Device device = new Device(DEVICE_NAME);
-		Group actualGroup = groupService.assign(group, device);
+		Group actualGroup = groupService.assign(group, Collections.singletonList(device));
 
 		assertEquals(1, actualGroup.getDevices().size());
 	}
 
 	@Test
-	public void assignMoreDevicesToGroupTest(){
+	public void assignMoreDevicesToGroupTest() {
 		Group group = new Group(GROUP_NAME);
 		when(groupRepository.save(group)).thenReturn(group);
 
@@ -80,15 +81,15 @@ public class GroupServiceTest {
 	}
 
 	@Test
-	public void registerUnregisteredGroupTest(){
+	public void registerUnregisteredGroupTest() {
 		when(groupRepository.existsById(any())).thenReturn(false);
 		when(groupRepository.existsById(REGISTERED_GROUP_NAME)).thenReturn(true);
 
 		groupService.register(new Group(GROUP_NAME));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void registerRegisteredGroupTest(){
+	@Test(expected = RegistrationException.class)
+	public void registerRegisteredGroupTest() {
 		when(groupRepository.existsById(any())).thenReturn(false);
 		when(groupRepository.existsById(REGISTERED_GROUP_NAME)).thenReturn(true);
 

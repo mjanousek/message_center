@@ -14,9 +14,14 @@ import java.util.List;
 @Service
 public class CommandFactory {
 
-	@Autowired protected KeywordApiService keywordApiService;
-	@Autowired protected MessageApiService messageApiService;
-	@Autowired protected RegisterApiService registerApiService;
+	@Autowired
+	protected KeywordApiService keywordApiService;
+
+	@Autowired
+	protected MessageApiService messageApiService;
+
+	@Autowired
+	protected RegisterApiService registerApiService;
 
 	public Command createCommand(String input) {
 		String[] parts = input.split(" ");
@@ -48,8 +53,8 @@ public class CommandFactory {
 		return command;
 	}
 
-	private List<String> getParams(String[] parts) {
-		List<String> params = new LinkedList<>(Arrays.asList(parts));
+	private List<String> getParams(String[] commandWithParams) {
+		List<String> params = new LinkedList<>(Arrays.asList(commandWithParams));
 		if (params.size() > 0) {
 			params.remove(0);
 		}

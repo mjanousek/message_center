@@ -1,5 +1,6 @@
 package dk.cngroup.messagecenter.service.api;
 
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
 import dk.cngroup.messagecenter.service.entity.DeviceService;
@@ -22,17 +23,17 @@ public class RegisterApiService {
 	@Autowired
 	GroupService groupService;
 
-	public void registerDevice(String deviceId){
+	public void registerDevice(String deviceId) {
 		Device device = DeviceFactory.createDevice(deviceId);
 		deviceService.register(device);
 	}
 
-	public void registerGroup(String groupId){
+	public void registerGroup(String groupId) {
 		Group group = GroupFactory.createGroup(groupId);
 		groupService.register(group);
 	}
 
-	public void assignDeviceToGroup(String groupId, String... deviceIds){
+	public void assignDevicesToGroup(String groupId, String... deviceIds) {
 		Group group = groupService.findByName(groupId);
 		checkIfEntityIsRegistered(Group.class, groupId, group);
 		List<Device> devices = deviceService.findByNames(deviceIds);
@@ -45,13 +46,13 @@ public class RegisterApiService {
 			List<String> unregisteredDevices = Arrays.stream(deviceIds)
 					.filter(id -> !devices.contains(new Device(id)))
 					.collect(Collectors.toList());
-			throw new IllegalArgumentException("Devices '" + unregisteredDevices + "' are not registered");
+			throw new RegistrationException("Devices '" + unregisteredDevices + "' are not registered");
 		}
 	}
 
 	public static void checkIfEntityIsRegistered(Class<?> type, String id, Object entity) {
 		if (entity == null) {
-			throw new IllegalArgumentException(type.getSimpleName() + " '" + id + "' is not registered");
+			throw new RegistrationException(type.getSimpleName() + " '" + id + "' is not registered");
 		}
 	}
 }

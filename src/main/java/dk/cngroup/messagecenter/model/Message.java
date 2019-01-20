@@ -1,6 +1,5 @@
 package dk.cngroup.messagecenter.model;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 

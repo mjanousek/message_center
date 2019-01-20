@@ -12,9 +12,9 @@ import java.util.Set;
 public class MessageCenter {
 
 	@Autowired
-	/* The second option how to implement this is usage of Acpects but
-	* I have to limit usage of Spring and Java dependencies to th essentials as
-	* it is written in the assignment*/
+	/* The second option how to implement this is usage of Aspects but
+	 * I have to limit usage of Spring and Java dependencies to the essentials as
+	 * it is written in the assignment*/
 	private Set<MessageProcessor> processors;
 
 	@Autowired

@@ -1,6 +1,7 @@
 package dk.cngroup.messagecenter.commandline;
 
 import dk.cngroup.messagecenter.commandline.command.Command;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -10,15 +11,19 @@ import java.util.Scanner;
 
 @Component
 @Profile("!test")
-public class CommandLineService implements CommandLineRunner {
+public class CommandLineComponent implements CommandLineRunner {
 
 	@Autowired
 	CommandFactory commandFactory;
 
 	@Override
 	public void run(String... args) throws Exception {
+		printWelcomeMessage();
+		readInput();
+	}
+
+	private void readInput() {
 		Scanner input = new Scanner(System.in);
-		System.out.println("... Application is running ...");
 		while (input.hasNext()) {
 			String command = input.nextLine();
 			if (shouldQuit(command)) {
@@ -26,6 +31,10 @@ public class CommandLineService implements CommandLineRunner {
 			}
 			execute(command);
 		}
+	}
+
+	private void printWelcomeMessage() {
+		System.out.println("... Application is running ...");
 	}
 
 	private boolean shouldQuit(String command) {
@@ -36,7 +45,7 @@ public class CommandLineService implements CommandLineRunner {
 		try {
 			Command c = commandFactory.createCommand(command);
 			c.execute();
-		} catch (IllegalArgumentException e) {
+		} catch (RegistrationException e) {
 			System.err.println(e.getMessage());
 		}
 	}

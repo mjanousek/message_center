@@ -1,6 +1,7 @@
 package dk.cngroup.messagecenter.service.entity;
 
 import dk.cngroup.messagecenter.data.GroupRepository;
+import dk.cngroup.messagecenter.exception.RegistrationException;
 import dk.cngroup.messagecenter.model.Device;
 import dk.cngroup.messagecenter.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +24,13 @@ public class GroupService implements Register<Group> {
 	@Override
 	public Group register(Group group) {
 		if (repository.existsById(group.getName())) {
-			throw new IllegalArgumentException("Group '" + group.getName() + "' is already registered");
+			throw new RegistrationException("Group '" + group.getName() + "' is already registered");
 		}
 		return repository.save(group);
 	}
 
 	public Group findByName(String name) {
 		return repository.findByName(name);
-	}
-
-	public Group assign(Group group, Device device) {
-		group.assignDevice(device);
-		return repository.save(group);
 	}
 
 	public Group assign(Group group, List<Device> devices) {
