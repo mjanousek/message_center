@@ -35,6 +35,8 @@ public class CommandFactory {
 			return initCommand(new RegisterGroupCommand(params));
 		} else if (command.equalsIgnoreCase("ASG") && params.size() == 2) {
 			return initCommand(new AssignCommand(params));
+		} else if (command.equalsIgnoreCase("UNASG") && params.size() == 2) {
+			return initCommand(new UnassignCommand(params));
 		} else if (command.equalsIgnoreCase("KEY") && params.size() == 1) {
 			return initCommand(new KeywordCommand(params));
 		} else if (command.equalsIgnoreCase("MSG_P2P") && params.size() >= 3) {

@@ -20,6 +20,7 @@ public class HelpCommand extends Command {
 				"\t- REG_G <group_name>\n" +
 				"\t- REG_D <device_name>\n" +
 				"\t- ASG <group_name> <device_name>[,<device_name>]\n" +
+				"\t- UNASG <group_name> <device_name>[,<device_name>]\n" +
 				"\t- KEY <keyword>\n" +
 				"\t- MSG_P2P <sender> <receiver> <message>\n" +
 				"\t- MSG_BRO <sender> <message>\n" +

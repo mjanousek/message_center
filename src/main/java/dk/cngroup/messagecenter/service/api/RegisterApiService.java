@@ -34,11 +34,27 @@ public class RegisterApiService {
 	}
 
 	public void assignDevicesToGroup(String groupId, String... deviceIds) {
+		Group group = getGroup(groupId);
+		List<Device> devices = getGroupsDevices(deviceIds);
+		groupService.assign(group, devices);
+	}
+
+	public void unassignDevicesFromGroup(String groupId, String... deviceIds) {
+		Group group = getGroup(groupId);
+		List<Device> devices = getGroupsDevices(deviceIds);
+		groupService.unassign(group, devices);
+	}
+
+	private Group getGroup(String groupId) {
 		Group group = groupService.findByName(groupId);
 		checkIfEntityIsRegistered(Group.class, groupId, group);
+		return group;
+	}
+
+	private List<Device> getGroupsDevices(String[] deviceIds) {
 		List<Device> devices = deviceService.findByNames(deviceIds);
 		checkIfDevicesAreRegistered(devices, deviceIds);
-		groupService.assign(group, devices);
+		return devices;
 	}
 
 	private void checkIfDevicesAreRegistered(List<Device> devices, String[] deviceIds) {

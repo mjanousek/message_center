@@ -38,4 +38,9 @@ public class GroupService implements Register<Group> {
 		group.assignDevices(deviceSet);
 		return repository.save(group);
 	}
+
+	public Group unassign(Group group, List<Device> devices) {
+		group.getDevices().removeAll(devices);
+		return repository.save(group);
+	}
 }
